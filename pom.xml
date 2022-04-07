@@ -288,6 +288,7 @@
     <module>all</module>
     <module>bom</module>
     <module>tarball</module>
+      <module>netty-demo</module>
   </modules>
 
   <dependencyManagement>
