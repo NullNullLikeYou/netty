@@ -39,6 +39,12 @@ import static com.chuan.ByteBufferUtil.debugRead;
  * - 调用 selector.close()
  * - selector 所在线程 interrupt
  *
+ * 处理消息的边界
+ * 固定消息长度，数据包大小一样，服务器按预定长度读取，缺点是浪费带宽
+ * 按分隔符拆分，缺点是效率低
+ * TLV 格式，即 Type 类型、Length 长度、Value 数据，类型和长度已知的情况下，就可以方便获取消息大小，
+ * 分配合适的 buffer，缺点是 buffer 需要提前分配，如果内容过大，则影响 server 吞吐量
+ *
  * @author chuan
  */
 @Slf4j
@@ -76,7 +82,7 @@ public class MultiplexNIOServer {
                 }
                 else if (key.isReadable()) {
                     SocketChannel sc = (SocketChannel) key.channel();
-                    ByteBuffer buffer = ByteBuffer.allocate(128);
+                    ByteBuffer buffer = ByteBuffer.allocate(3);
                     // 读取sc并写入到buffer中
                     int read = sc.read(buffer);
                     if (read == -1) {
