@@ -12,23 +12,23 @@ import java.util.Arrays;
 
 /**
  * @author chuan
+ * <p>
+ * ServerSocketChannel.accept 会在没有连接建立时让线程暂停
+ * - SocketChannel.read 会在没有数据可读时让线程暂停
  */
 public class BIOServer {
 
     public static void main(String[] args) throws IOException {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        byte[] bytes = new byte[1024];
         ServerSocket serverSocket = new ServerSocket(8080);
-        ServerSocketChannel ssc = serverSocket.getChannel();
-        Socket socket = serverSocket.accept();
-        InputStream inputStream = socket.getInputStream();
-        inputStream.read(bytes);
-        System.out.println(Arrays.toString(bytes));
-        OutputStream outputStream = socket.getOutputStream();
-        outputStream.write(2);
-        outputStream.flush();
         while (true) {
-
+            byte[] bytes = new byte[1];
+            Socket socket = serverSocket.accept();
+            InputStream inputStream = socket.getInputStream();
+            inputStream.read(bytes);
+            System.out.println(Arrays.toString(bytes));
+            OutputStream outputStream = socket.getOutputStream();
+            outputStream.write(2);
+            outputStream.flush();
         }
     }
 }
