@@ -126,7 +126,7 @@ public class MultiThreadMultiplexNIOServer {
                     SelectionKey sckey = sc.register(worker, 0, null);
                     sckey.interestOps(SelectionKey.OP_READ);
                     // 如果读不到立刻返回
-                    worker.selectNow();
+                    //worker.selectNow();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -141,6 +141,7 @@ public class MultiThreadMultiplexNIOServer {
                 try {
                     worker.select();
                     Runnable task = tasks.poll();
+                    // work优先取任务,保证新的连接第一时间关注可读事件
                     if (task != null) {
                         task.run();
                     }
